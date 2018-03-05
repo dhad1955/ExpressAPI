@@ -1,0 +1,18 @@
+web:
+  build: .
+  environment:
+    - PORT=3000
+  volumes:
+    - "./app:/src/app"
+  ports:
+    - "3000:3000"
+  links:
+    - redis
+
+
+redis:
+  image: redis
+  expose:
+    - 6379
+  ports:
+    - "6379:6379"
