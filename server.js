@@ -18,7 +18,7 @@ var port = process.env.PORT || 8080;        // set our port
 var router = express.Router();              // get an instance of the express Router
 
 // REGISTER OUR ROUTES
-require('./app/routes/json.routes.js')(app);
+require('./app/routes/objects.routes.js')(app);
 
 // START THE SERVER
 app.listen(port);
