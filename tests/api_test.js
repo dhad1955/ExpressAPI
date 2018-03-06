@@ -77,7 +77,7 @@ describe( 'Objects', function() {
         it( 'should return a valid response for creating a new object', function( done ) {
             chai.request( server )
                 .put( '/objects/' + generatedId )
-                .send( { key: "value" } )
+                .send( { key: 'value' } )
                 .end( ( err, res ) => {
                     res.should.have.status( 201 );
                     res.body.should.have.property( 'id' );
@@ -92,7 +92,7 @@ describe( 'Objects', function() {
             let testingObject = allObjects[ 0 ];
             chai.request( server )
                 .put( '/objects/' + testingObject.id )
-                .send( { key: "value2" } )
+                .send( { key: 'value2' } )
                 .end( ( err, res ) => {
                     res.should.have.status( 200 );
                     res.body.should.have.property( 'id' );
