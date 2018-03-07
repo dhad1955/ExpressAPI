@@ -1,20 +1,30 @@
 module.exports = {
 
-    // Create a new object
+    /**
+     * Create a new object in the datastore
+     * Store it in the repository then return the
+     * generated id.
+     * @param request - the request object from Express
+     * @param response - the response object from Express
+     */
     create: function( request, response ) {
+
         let parse = JSON.stringify( request.body );
 
+        // Make sure it's valid JSON and we have atleast one key.
         if( !parse || Object.keys( request.body ).length === 0 ) {
             response.status( 400 );
-            response.send( 'Malformed input '+parse);
+            response.send( 'Malformed input ' + parse );
             return;
         }
 
+        // TODO: Hidden dependency. We need to inject it
+        let repository = require( '../repositories/objects.repository.js' );
 
-        let model = require( '../models/objects.model.js' );
-
-        model.create(request.body )
-            .then( (result ) => {
+        // Create a new object inside the repository
+        // and return the result with the id attached
+        repository.create( request.body )
+            .then( ( result ) => {
                 response.status( 201 );
                 response.json( result );
             } )
@@ -25,17 +35,26 @@ module.exports = {
             } );
     },
 
-    // Find an object or return 404 if it doesn't exist
+    /**
+     * Find an object by ID and return it
+     * @param request - the request object from Express
+     * @param response - the response object from Express
+     */
     find: function( request, response ) {
 
+        // Have we supplied an ID?
         if( !request.params.id ) {
             response.status( 404 );
             response.send( 'Object not found.' );
             return;
         }
 
-        let model = require( '../models/objects.model.js' );
-        model.find( request.params.id )
+        // TODO: Hidden dependency. We need to inject it
+        let repository = require( '../repositories/objects.repository.js' );
+
+        // Find the object
+        // and return the result with the id attached
+        repository.find( request.params.id )
             .then( ( result ) => {
                 response.status( 200 )
                     .json( result );
@@ -46,10 +65,19 @@ module.exports = {
             } );
     },
 
-    // Get all objects
+    /**
+     * Get all objects in the repository
+     * @param request - the request object from Express
+     * @param response - the response object from Express
+     */
     all: function( request, response ) {
-        let model = require( '../models/objects.model.js' );
-        model.all()
+
+        // TODO: Hidden dependency. We need to inject it
+        let repository = require( '../repositories/objects.repository.js' );
+
+        // Get all objects from the repository then return them
+        // with the id attached
+        repository.all()
             .then( ( result ) => {
                 response.status( 200 )
                     .json( result );
@@ -61,29 +89,38 @@ module.exports = {
             } );
     },
 
-    // PUT (update or create) a new object
+    /**
+     * Update / PUT an object
+     * We supply an ID and create it if it doesn't exist
+     * Overwrite it if it does exist
+     * Returning the correct HTTP Code
+     * @param request - the request object from Express
+     * @param response - the response object from Express
+     */
     put: function( request, response ) {
 
+        // Have we supplied an ID?
         if( !request.params.id ) {
             response.status( 400 );
             response.send( 'Invalid ID specified' );
             return;
         }
 
-        let model = require( '../models/objects.model.js' );
+        // TODO: Hidden dependency. We need to inject it
+        let repository = require( '../repositories/objects.repository.js' );
 
-        model.find( request.params.id )
+        repository.find( request.params.id )
             .then( () => {
                 // Update
-                model.put( request.params.id, request.body )
+                repository.put( request.params.id, request.body )
                     .then( ( result ) => {
                         response.status( 200 )
                             .json( result );
                     } )
             } )
             .catch( () => {
-                // Created new model
-                model.put( request.params.id, request.body )
+                // Created new object
+                repository.put( request.params.id, request.body )
                     .then( ( result ) => {
                         response.status( 201 )
                             .json( result );
@@ -91,19 +128,26 @@ module.exports = {
             } )
     },
 
-    // Delete an object (existing object)
+    /**
+     * Delete an object from the repository
+     * Returning the correct HTTP Code
+     * @param request - the request object from Express
+     * @param response - the response object from Express
+     */
     delete: function( request, response ) {
-        let model = require( '../models/objects.model.js' );
+        // TODO: Hidden dependency. We need to inject it
+        let repository = require( '../repositories/objects.repository.js' );
 
+        // Have we supplied an ID?
         if( !request.params.id ) {
             response.status( 400 );
             response.send( 'Invalid ID specified' );
             return;
         }
-
-        model.find( request.params.id )
+        // Does our object exist?
+        repository.find( request.params.id )
             .then( ( result ) => {
-                model.delete( request.params.id )
+                repository.delete( request.params.id )
                     .then( () => {
                         response.status( 200 )
                             .send( 'Object deleted' );
@@ -114,6 +158,7 @@ module.exports = {
                     } )
             } )
             .catch( () => {
+                // Does not exist so return 404.
                 response.status( 404 )
                     .send( 'Object not found' );
             } );

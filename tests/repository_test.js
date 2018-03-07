@@ -11,12 +11,12 @@ let redis = require( 'redis' );
 
 var client = redis.createClient( 6379, process.env.NODE_ENV === 'test' ? 'localhost' : 'redis' );
 
-let model = require( '../app/models/objects.model.js' );
-let createdModel = null;
+let repository = require( '../app/repositories/objects.repository.js' );
+let createdrepository = null;
 
-describe( 'model all()', function() {
+describe( 'repository all()', function() {
     it( 'should return an array of all entries with', function( done ) {
-        model.all()
+        repository.all()
             .then( ( entries ) => {
                 entries.should.be.an( 'array' );
                 done();
@@ -24,24 +24,24 @@ describe( 'model all()', function() {
     } )
 } );
 
-describe( 'model create', function() {
+describe( 'repository create', function() {
     it( 'should create an entry and give us an id', function( done ) {
-        model.create( { test: 1 } )
+        repository.create( { test: 1 } )
             .then( ( result ) => {
                 result.should.have.property( 'id' );
                 result.should.have.property( 'body' );
                 result.body.should.have.property( 'test' );
-                createdModel = result;
+                createdrepository = result;
                 done();
             } );
     } )
 } );
 
 
-describe( 'model put', function() {
-    it( 'should update our created model with the new id', function() {
-        model.put( createdModel.id, { test4: 4 }, function( done ) {
-            model.find( createdModel.id )
+describe( 'repository put', function() {
+    it( 'should update our created repository with the new id', function() {
+        repository.put( createdrepository.id, { test4: 4 }, function( done ) {
+            repository.find( createdrepository.id )
                 .then( ( result ) => {
                     result.body.should.have.property( 'test4' );
                     result.body.should.not.have.property( 'test' );
@@ -50,11 +50,11 @@ describe( 'model put', function() {
         } );
     } );
 
-    it( 'should create a new model with our specified id', function( done ) {
+    it( 'should create a new repository with our specified id', function( done ) {
         let ourID = 'test123';
-        model.put( ourID, { test5: 4 } )
+        repository.put( ourID, { test5: 4 } )
             .then( () => {
-                model.find( ourID )
+                repository.find( ourID )
                     .then( ( result ) => {
                         console.log( result.body );
                         result.body.should.have.property( 'test5' );

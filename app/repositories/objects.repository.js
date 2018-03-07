@@ -1,5 +1,11 @@
 module.exports = {
 
+    /**
+     * Find an object by ID and return it (transformed)
+     * @see transform
+     * @param id - The object ID
+     * @returns {Promise}
+     */
     find: function( id ) {
         return new Promise( ( resolve, reject ) => {
             global.client.get( id, ( err, res ) => {
@@ -12,7 +18,12 @@ module.exports = {
         } );
     },
 
-
+    /**
+     * Create an object and return the id (transformed)
+     * @see transform
+     * @param body
+     * @returns {Promise}
+     */
     create: function( body ) {
         let uuidv1 = require( 'uuid' );
         let id = uuidv1();
@@ -27,18 +38,24 @@ module.exports = {
         } )
     },
 
+    /**
+     * Return all objects and concat them transformed
+     * @see transform
+     * @returns {Promise}
+     */
     all: function() {
         return new Promise( ( resolve, reject ) => {
             global.client.keys( '*', ( err, keys ) => {
                 let output = [];
                 let index = 0;
-                let iterator = () => {
 
+                // Asynchronous hell with node..
+                let iterator = () => {
+                    // Operation finished
                     if( index >= keys.length ) {
                         resolve( output );
                         return;
                     }
-
                     global.client.get( keys[ index ], ( err, res ) => {
                         output.push( this.transform( keys[ index ], (res) ) );
                         index++;
@@ -51,7 +68,12 @@ module.exports = {
         } )
     },
 
-
+    /**
+     * PUT or overwrite an object
+     * @param id - the object ID
+     * @param body - the body of the Object
+     * @returns {Promise}
+     */
     put: function( id, body ) {
         return new Promise( ( resolve, reject ) => {
             global.client.set( id, JSON.stringify(body), ( err, res ) => {
@@ -60,7 +82,12 @@ module.exports = {
         } );
     },
 
-    delete: function( id, body ) {
+    /**
+     * Delete an object
+     * @param id - the ID of the object
+     * @returns {Promise}
+     */
+    delete: function( id  ) {
         return new Promise( ( resolve, reject ) => {
             global.client.del( id, ( err ) => {
                 if( err ) {
@@ -71,10 +98,17 @@ module.exports = {
             } )
         } )
     },
-
+    /**
+     * Transform an object and ID into one object
+     * returning {id: id, body: body)
+     * @param id - the object ID
+     * @param body - the body of the object
+     * @returns {{id: *, body: *}}
+     */
     transform: function( id, body ) {
 
-        if(typeof body ==  'string') {
+        // Defensive programming
+        if(typeof body === 'string') {
             body = JSON.parse(body);
         }
 

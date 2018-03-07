@@ -1,4 +1,8 @@
-
+/**
+ * A basic POC Application
+ * To store objects in an in-memory database
+ * @type {*|createApplication}
+ */
 // call the packages we need
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
