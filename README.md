@@ -4,7 +4,7 @@ Develop a CRUD REST/HTTP API proof-of-concept (POC) application which stores dat
 ## How to run
 1. docker-compose build
 2. docker-compose up
-4. Visit http://localhost:3000/objects for endpoint
+4. See endpoints below
 
 ## To develop / run tests
 1. docker-compose build
@@ -12,3 +12,11 @@ Develop a CRUD REST/HTTP API proof-of-concept (POC) application which stores dat
 3. npm install
 4. npm test
 
+
+## Endpoints
+
+- **[<code>GET</code> /objects](http://localhost:3000/objects)**
+- **[<code>POST</code> /objects](http://localhost:3000/objects/)**
+- **[<code>GET</code> /objects/:id](http://localhost:3000/objects/:id)**
+- **[<code>PUT</code> /objects/:id](http://localhost:3000/objects/:id)**
+- **[<code>DELETE</code> /objects/:id](http://localhost:3000/objects/:id)**
