@@ -1,6 +1,8 @@
 module.exports = function( app ) {
 
-    let objectController = require( '../controllers/objects.controller.js' );
+    var ObjectController = require( '../controllers/objects.controller.js' );
+
+    let objectController = new ObjectController(require('../repositories/objects.repository.js'));
 
     app.route( '/objects/:id' )
         .get( objectController.find )

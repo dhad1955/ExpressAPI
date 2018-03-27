@@ -1,5 +1,4 @@
-module.exports = {
-
+module.exports = function( repository ) {
     /**
      * Create a new object in the datastore
      * Store it in the repository then return the
@@ -7,7 +6,7 @@ module.exports = {
      * @param request - the request object from Express
      * @param response - the response object from Express
      */
-    create: function( request, response ) {
+    this.create = function( request, response ) {
 
         let parse = JSON.stringify( request.body );
 
@@ -18,29 +17,25 @@ module.exports = {
             return;
         }
 
-        // TODO: Hidden dependency. We need to inject it
-        let repository = require( '../repositories/objects.repository.js' );
-
         // Create a new object inside the repository
         // and return the result with the id attached
         repository.create( request.body )
-            .then( ( result ) => {
+            .then( function( result ) {
                 response.status( 201 );
                 response.json( result );
             } )
-            .catch( ( err ) => {
-                console.log( err );
+            .catch( function(  ) {
                 response.status( 500 )
                     .send( 'Error when creating object' );
             } );
-    },
+    };
 
     /**
      * Find an object by ID and return it
      * @param request - the request object from Express
      * @param response - the response object from Express
      */
-    find: function( request, response ) {
+    this.find = function( request, response ) {
 
         // Have we supplied an ID?
         if( !request.params.id ) {
@@ -49,45 +44,38 @@ module.exports = {
             return;
         }
 
-        // TODO: Hidden dependency. We need to inject it
-        let repository = require( '../repositories/objects.repository.js' );
-
         // Find the object
         // and return the result with the id attached
         repository.find( request.params.id )
-            .then( ( result ) => {
+            .then( function( result ) {
                 response.status( 200 )
                     .json( result );
             } )
-            .catch( ( errCode ) => {
+            .catch( function( errCode ) {
                 response.status( errCode )
                     .send( 'Object not found' );
             } );
-    },
+    };
 
     /**
      * Get all objects in the repository
      * @param request - the request object from Express
      * @param response - the response object from Express
      */
-    all: function( request, response ) {
-
-        // TODO: Hidden dependency. We need to inject it
-        let repository = require( '../repositories/objects.repository.js' );
+    this.all = function( request, response ) {
 
         // Get all objects from the repository then return them
         // with the id attached
         repository.all()
-            .then( ( result ) => {
+            .then( function( result ) {
                 response.status( 200 )
                     .json( result );
             } )
-            .catch( ( err ) => {
-                console.log( err );
+            .catch( function( err ) {
                 response.status( 500 )
                     .send( 'Error retrieving all objects' );
             } );
-    },
+    };
 
     /**
      * Update / PUT an object
@@ -97,7 +85,7 @@ module.exports = {
      * @param request - the request object from Express
      * @param response - the response object from Express
      */
-    put: function( request, response ) {
+    this.put = function( request, response ) {
 
         // Have we supplied an ID?
         if( !request.params.id ) {
@@ -106,27 +94,23 @@ module.exports = {
             return;
         }
 
-        // TODO: Hidden dependency. We need to inject it
-        let repository = require( '../repositories/objects.repository.js' );
-
         repository.find( request.params.id )
-            .then( () => {
-                // Update
+            .then( function() {
                 repository.put( request.params.id, request.body )
-                    .then( ( result ) => {
+                    .then( function( result ) {
                         response.status( 200 )
                             .json( result );
                     } )
             } )
-            .catch( () => {
+            .catch( function() {
                 // Created new object
                 repository.put( request.params.id, request.body )
-                    .then( ( result ) => {
+                    .then( function( result ) {
                         response.status( 201 )
                             .json( result );
                     } )
             } )
-    },
+    };
 
     /**
      * Delete an object from the repository
@@ -134,9 +118,7 @@ module.exports = {
      * @param request - the request object from Express
      * @param response - the response object from Express
      */
-    delete: function( request, response ) {
-        // TODO: Hidden dependency. We need to inject it
-        let repository = require( '../repositories/objects.repository.js' );
+    this.delete = function( request, response ) {
 
         // Have we supplied an ID?
         if( !request.params.id ) {
@@ -146,21 +128,21 @@ module.exports = {
         }
         // Does our object exist?
         repository.find( request.params.id )
-            .then( ( result ) => {
+            .then( function( result ) {
                 repository.delete( request.params.id )
-                    .then( () => {
+                    .then( function() {
                         response.status( 200 )
                             .send( 'Object deleted' );
                     } )
-                    .catch( () => {
+                    .catch( function() {
                         response.status( 500 )
                             .send( 'Error deleting object' );
                     } )
             } )
-            .catch( () => {
+            .catch( function() {
                 // Does not exist so return 404.
                 response.status( 404 )
                     .send( 'Object not found' );
             } );
-    },
+    }
 };

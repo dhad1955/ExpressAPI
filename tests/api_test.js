@@ -22,7 +22,6 @@ describe( 'Objects', function() {
             } )
     } );
 
-
     describe( 'Objects /POST', function() {
         it( 'Should create an object succesfully', function( done ) {
             chai.request( server )

@@ -2,7 +2,7 @@ module.exports = {
 
     /**
      * Find an object by ID and return it (transformed)
-     * @see transform
+     * @see decorate
      * @param id - The object ID
      * @returns {Promise}
      */
@@ -12,7 +12,7 @@ module.exports = {
                 if( !res ) {
                     reject( 404 );
                 } else {
-                    resolve( this.transform( id, (JSON.parse(res)) ) );
+                    resolve( this.decorate( id, (JSON.parse(res)) ) );
                 }
             } )
         } );
@@ -20,7 +20,7 @@ module.exports = {
 
     /**
      * Create an object and return the id (transformed)
-     * @see transform
+     * @see decorate
      * @param body
      * @returns {Promise}
      */
@@ -32,7 +32,7 @@ module.exports = {
                 if( err ) {
                     return reject( err );
                 }
-                return resolve( this.transform( id, body ) );
+                return resolve( this.decorate( id, body ) );
             }) )
 
         } )
@@ -40,7 +40,7 @@ module.exports = {
 
     /**
      * Return all objects and concat them transformed
-     * @see transform
+     * @see decorate
      * @returns {Promise}
      */
     all: function() {
@@ -57,7 +57,7 @@ module.exports = {
                         return;
                     }
                     global.client.get( keys[ index ], ( err, res ) => {
-                        output.push( this.transform( keys[ index ], (res) ) );
+                        output.push( this.decorate( keys[ index ], (res) ) );
                         index++;
                         iterator();
                     } );
@@ -77,7 +77,7 @@ module.exports = {
     put: function( id, body ) {
         return new Promise( ( resolve, reject ) => {
             global.client.set( id, JSON.stringify(body), ( err, res ) => {
-                resolve( this.transform( id, body ) );
+                resolve( this.decorate( id, body ) );
             } );
         } );
     },
@@ -99,13 +99,13 @@ module.exports = {
         } )
     },
     /**
-     * Transform an object and ID into one object
+     * Decorate an object with the ID
      * returning {id: id, body: body)
      * @param id - the object ID
      * @param body - the body of the object
      * @returns {{id: *, body: *}}
      */
-    transform: function( id, body ) {
+    decorate: function( id, body ) {
 
         // Defensive programming
         if(typeof body === 'string') {
