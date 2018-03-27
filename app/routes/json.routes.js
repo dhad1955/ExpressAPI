@@ -1,7 +1,6 @@
 module.exports = function( app ) {
 
     var JsonController = require( '../controllers/json.controller.js' );
-
     let controllerInstance = new JsonController(require('../storage/redis.storage.js'));
 
     app.route( '/json/:id' )

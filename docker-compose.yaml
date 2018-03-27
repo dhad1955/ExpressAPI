@@ -9,7 +9,6 @@ web:
   links:
     - redis
 
-
 redis:
   image: redis
   expose:
