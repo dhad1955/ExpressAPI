@@ -17,16 +17,19 @@ module.exports = function( database ) {
             return;
         }
 
-        // Create a new object inside the database
-        // and return the result with the id attached
+
         database.create( request.body )
             .then( function( result ) {
+
                 response.status( 201 );
                 response.json( result );
+
             } )
             .catch( function(  ) {
+
                 response.status( 500 )
                     .send( 'Error when creating object' );
+
             } );
     };
 
@@ -44,16 +47,18 @@ module.exports = function( database ) {
             return;
         }
 
-        // Find the object
-        // and return the result with the id attached
         database.find( request.params.id )
             .then( function( result ) {
+
                 response.status( 200 )
                     .json( result );
+
             } )
             .catch( function( errCode ) {
+
                 response.status( errCode )
                     .send( 'Object not found' );
+
             } );
     };
 
@@ -62,18 +67,22 @@ module.exports = function( database ) {
      * @param request - the request object from Express
      * @param response - the response object from Express
      */
+
     this.all = function( request, response ) {
 
-        // Get all objects from the database then return them
-        // with the id attached
+
         database.all()
             .then( function( result ) {
+
                 response.status( 200 )
                     .json( result );
+
             } )
             .catch( function( err ) {
+
                 response.status( 500 )
                     .send( 'Error retrieving all objects' );
+
             } );
     };
 
@@ -96,19 +105,24 @@ module.exports = function( database ) {
 
         database.find( request.params.id )
             .then( function() {
+
                 database.put( request.params.id, request.body )
                     .then( function( result ) {
                         response.status( 200 )
                             .json( result );
                     } )
+
             } )
             .catch( function() {
-                // Created new object
+
                 database.put( request.params.id, request.body )
                     .then( function( result ) {
+
                         response.status( 201 )
                             .json( result );
+
                     } )
+
             } )
     };
 
@@ -126,23 +140,31 @@ module.exports = function( database ) {
             response.send( 'Invalid ID specified' );
             return;
         }
+
         // Does our object exist?
         database.find( request.params.id )
             .then( function( result ) {
+
                 database.delete( request.params.id )
                     .then( function() {
+
                         response.status( 200 )
                             .send( 'Object deleted' );
+
                     } )
                     .catch( function() {
+
                         response.status( 500 )
                             .send( 'Error deleting object' );
+
                     } )
+
             } )
             .catch( function() {
                 // Does not exist so return 404.
                 response.status( 404 )
                     .send( 'Object not found' );
+
             } );
     }
 };

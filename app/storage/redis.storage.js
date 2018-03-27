@@ -25,7 +25,7 @@ exports.find = function( id ) {
 };
 
 /**
- * Create an object and return the id (decorateed)
+ * Create an object and return the id (decorated)
  * @see decorate
  * @param body
  * @returns {Promise}
@@ -105,7 +105,7 @@ exports.delete = function( id ) {
     } )
 };
 /**
- * decorate an object with the ID
+ * ecorate an object with the ID
  * returning {id: id, body: body)
  * @param id - the object ID
  * @param body - the body of the object
