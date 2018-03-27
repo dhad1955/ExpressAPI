@@ -15,8 +15,8 @@ Develop a CRUD REST/HTTP API proof-of-concept (POC) application which stores dat
 
 ## Endpoints
 
-- **[<code>GET</code> /objects](http://localhost:3000/objects)**
-- **[<code>POST</code> /objects](http://localhost:3000/objects/)**
-- **[<code>GET</code> /objects/:id](http://localhost:3000/objects/:id)**
-- **[<code>PUT</code> /objects/:id](http://localhost:3000/objects/:id)**
-- **[<code>DELETE</code> /objects/:id](http://localhost:3000/objects/:id)**
+- **[<code>GET</code> /json](http://localhost:3000/json)**
+- **[<code>POST</code> /json](http://localhost:3000/json/)**
+- **[<code>GET</code> /json/:id](http://localhost:3000/json/:id)**
+- **[<code>PUT</code> /json/:id](http://localhost:3000/json/:id)**
+- **[<code>DELETE</code> /json/:id](http://localhost:3000/json/:id)**

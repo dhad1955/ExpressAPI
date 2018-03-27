@@ -1,7 +1,7 @@
-module.exports = function( repository ) {
+module.exports = function( database ) {
     /**
      * Create a new object in the datastore
-     * Store it in the repository then return the
+     * Store it in the database then return the
      * generated id.
      * @param request - the request object from Express
      * @param response - the response object from Express
@@ -17,9 +17,9 @@ module.exports = function( repository ) {
             return;
         }
 
-        // Create a new object inside the repository
+        // Create a new object inside the database
         // and return the result with the id attached
-        repository.create( request.body )
+        database.create( request.body )
             .then( function( result ) {
                 response.status( 201 );
                 response.json( result );
@@ -46,7 +46,7 @@ module.exports = function( repository ) {
 
         // Find the object
         // and return the result with the id attached
-        repository.find( request.params.id )
+        database.find( request.params.id )
             .then( function( result ) {
                 response.status( 200 )
                     .json( result );
@@ -58,15 +58,15 @@ module.exports = function( repository ) {
     };
 
     /**
-     * Get all objects in the repository
+     * Get all objects in the database
      * @param request - the request object from Express
      * @param response - the response object from Express
      */
     this.all = function( request, response ) {
 
-        // Get all objects from the repository then return them
+        // Get all objects from the database then return them
         // with the id attached
-        repository.all()
+        database.all()
             .then( function( result ) {
                 response.status( 200 )
                     .json( result );
@@ -94,9 +94,9 @@ module.exports = function( repository ) {
             return;
         }
 
-        repository.find( request.params.id )
+        database.find( request.params.id )
             .then( function() {
-                repository.put( request.params.id, request.body )
+                database.put( request.params.id, request.body )
                     .then( function( result ) {
                         response.status( 200 )
                             .json( result );
@@ -104,7 +104,7 @@ module.exports = function( repository ) {
             } )
             .catch( function() {
                 // Created new object
-                repository.put( request.params.id, request.body )
+                database.put( request.params.id, request.body )
                     .then( function( result ) {
                         response.status( 201 )
                             .json( result );
@@ -113,7 +113,7 @@ module.exports = function( repository ) {
     };
 
     /**
-     * Delete an object from the repository
+     * Delete an object from the database
      * Returning the correct HTTP Code
      * @param request - the request object from Express
      * @param response - the response object from Express
@@ -127,9 +127,9 @@ module.exports = function( repository ) {
             return;
         }
         // Does our object exist?
-        repository.find( request.params.id )
+        database.find( request.params.id )
             .then( function( result ) {
-                repository.delete( request.params.id )
+                database.delete( request.params.id )
                     .then( function() {
                         response.status( 200 )
                             .send( 'Object deleted' );

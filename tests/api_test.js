@@ -13,7 +13,7 @@ var allObjects = [];
 describe( 'Objects', function() {
     it( 'should get all the objects in the database', function( done ) {
         chai.request( server )
-            .get( '/objects' )
+            .get( '/json' )
             .end( ( err, res ) => {
                 res.should.have.status( 200 );
                 res.body.should.be.an( 'array' );
@@ -25,7 +25,7 @@ describe( 'Objects', function() {
     describe( 'Objects /POST', function() {
         it( 'Should create an object succesfully', function( done ) {
             chai.request( server )
-                .post( '/objects' )
+                .post( '/json' )
                 .send( { key: 'value', key1: 'value' } )
                 .end( ( err, res ) => {
                     res.should.have.status( 201 );
@@ -37,7 +37,7 @@ describe( 'Objects', function() {
 
         it( 'Should return 400 for an empty body', function( done ) {
             chai.request( server )
-                .post( '/objects' )
+                .post( '/json' )
                 .send( null )
                 .end( ( err, res ) => {
                     res.should.have.status( 400 );
@@ -49,7 +49,7 @@ describe( 'Objects', function() {
     describe( 'Objects /GET/id', function() {
         it( 'should return a 404 for an invalid id', function( done ) {
             chai.request( server )
-                .get( '/objects/invalidId' )
+                .get( '/json/invalidId' )
                 .end( ( err, res ) => {
                     res.should.have.status( 404 );
                     done();
@@ -58,7 +58,7 @@ describe( 'Objects', function() {
 
         it( 'should return a valid object', function( done ) {
             chai.request( server )
-                .get( '/objects/' + allObjects[ 0 ].id )
+                .get( '/json/' + allObjects[ 0 ].id )
                 .end( ( err, res ) => {
                     res.should.have.status( 200 );
                     res.body.should.have.property( 'id' );
@@ -75,7 +75,7 @@ describe( 'Objects', function() {
 
         it( 'should return a valid response for creating a new object', function( done ) {
             chai.request( server )
-                .put( '/objects/' + generatedId )
+                .put( '/json/' + generatedId )
                 .send( { key: 'value' } )
                 .end( ( err, res ) => {
                     res.should.have.status( 201 );
@@ -90,7 +90,7 @@ describe( 'Objects', function() {
         it( 'should give a 200 and return the updated object when one already exists', function( done ) {
             let testingObject = allObjects[ 0 ];
             chai.request( server )
-                .put( '/objects/' + testingObject.id )
+                .put( '/json/' + testingObject.id )
                 .send( { key: 'value2' } )
                 .end( ( err, res ) => {
                     res.should.have.status( 200 );
@@ -106,7 +106,7 @@ describe( 'Objects', function() {
         let testingObject = allObjects[ 0 ];
         it( 'should return a 404 if the object does not exist', function( done ) {
             chai.request( server )
-                .delete( '/objects/SomethingInvalidThatDoesntExist' )
+                .delete( '/json/SomethingInvalidThatDoesntExist' )
                 .end( ( err, res ) => {
                     res.should.have.status( 404 );
                     done();
@@ -115,7 +115,7 @@ describe( 'Objects', function() {
 
         it( 'should return 200 if the object was deleted', function( done ) {
             chai.request( server )
-                .delete( '/objects/' + allObjects[ 0 ].id )
+                .delete( '/json/' + allObjects[ 0 ].id )
                 .end( ( err, res ) => {
                     res.should.have.status( 200 );
                     done();
